@@ -10,7 +10,14 @@ import SwiftUI
 
 final class PathControlDelegate: NSObject, ObservableObject, NSPathControlDelegate {
 
-    var transformMenuItems: ([PathMenuItem]) -> [PathMenuItem] = { $0 }
+    var transformMenuItems: ([PathMenuItem]) -> [PathMenuItem] = { currentPathItems in
+        var defaultItems = [
+            PathMenuItem.fileChooser(),
+            PathMenuItem(type: .divider, title: "")
+        ]
+        defaultItems.append(contentsOf: currentPathItems)
+        return defaultItems
+    }
     var urlChanged: (URL?) -> Void = { _ in }
     var actions = [ActionWrapper]()
 
@@ -22,7 +29,12 @@ final class PathControlDelegate: NSObject, ObservableObject, NSPathControlDelega
         actions = []
 
         let fileChooserItem = menu.item(at: 0)!
-        let pathMenuItems = (2..<menu.numberOfItems).compactMap { menu.item(at: $0) }
+        let pathMenuItems: [NSMenuItem]
+        if menu.items.count > 2 {
+            pathMenuItems = (2..<menu.numberOfItems).compactMap { menu.item(at: $0) }
+        } else {
+            pathMenuItems = []
+        }
 
         let originalPathItems = pathMenuItems.map {
             PathMenuItem(type: .wrapped($0), title: $0.title)

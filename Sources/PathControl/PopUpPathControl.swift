@@ -13,13 +13,20 @@ public struct PopUpPathControl: NSViewRepresentable {
     @ObservedObject private var delegate = PathControlDelegate()
     @Binding private var url: URL?
 
-    /// Creates a pop-up path control.
+    /// Creates a pop-up path control with its content created based on provided builder.
     ///
     /// - Parameter url: A binding to property that defines the currently-selected url.
     /// - Parameter content: Contents of pop-up menu.
     public init(url: Binding<URL?>, @PathMenuBuilder content: @escaping ([PathMenuItem]) -> [PathMenuItem]) {
         self._url = url
         self.delegate.transformMenuItems = content
+    }
+
+    /// Creates a pop-up path control with default contents.
+    ///
+    /// - Parameter url: A binding to property that defines the currently-selected url.
+    public init(url: Binding<URL?>) {
+        self._url = url
     }
 
     public func makeNSView(context: Context) -> NSPathControl {
