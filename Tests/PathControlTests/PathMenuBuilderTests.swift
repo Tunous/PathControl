@@ -84,9 +84,22 @@ final class PathMenuBuilderTests: XCTestCase {
     }
 
     func testCanUseDo() {
-        assertBuilder(expectedItems: [itemA]) { () -> [PathMenuItem] in
+        assertBuilder(expectedItems: [itemA]) {
             do {
                 itemA
+            }
+        }
+    }
+
+    func testCanCreateSubmenu() {
+        let expectedMenu = [
+            PathMenuItem(type: .item, title: "Submenu", action: {}, children: [
+                PathMenuItem(title: "Submenu item", action: {})
+            ])
+        ]
+        assertBuilder(expectedItems: expectedMenu) {
+            PathSubmenu(title: "Submenu") {
+                PathMenuItem(title: "Submenu item", action: {})
             }
         }
     }
@@ -110,5 +123,6 @@ final class PathMenuBuilderTests: XCTestCase {
         ("testCanUseSwitch", testCanUseSwitch),
         ("testCanUseOptional", testCanUseOptional),
         ("testCanUseDo", testCanUseDo),
+        ("testCanCreateSubmenu", testCanCreateSubmenu),
     ]
 }

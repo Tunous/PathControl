@@ -30,11 +30,13 @@ public struct PathMenuItem {
 
     let type: MenuItemType
     let action: () -> Void
+    let children: [PathMenuItem]
 
-    init(type: MenuItemType, title: String, action: @escaping () -> Void = {}) {
+    init(type: MenuItemType, title: String, action: @escaping () -> Void = {}, children: [PathMenuItem] = []) {
         self.type = type
         self.title = title
         self.action = action
+        self.children = children
     }
 }
 

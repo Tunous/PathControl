@@ -13,6 +13,10 @@ PopUpPathControl(url: $url) { menuItems in
         })
     }
     
+    PathSubmenu(title: "Submenu") {
+        PathMenuItem(title: "Submenu item", action: {})
+    }
+    
     Divider()
     
     menuItems

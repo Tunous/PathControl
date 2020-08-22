@@ -49,6 +49,12 @@ final class PathControlDelegate: NSObject, ObservableObject, NSPathControlDelega
 
                 let newItem = NSMenuItem(title: item.title, action: #selector(action.perform), keyEquivalent: "")
                 newItem.target = action
+
+                if !item.children.isEmpty {
+                    let submenu = NSMenu(title: item.title)
+                    submenu.items = createMenu(from: item.children, fileChooserItem: fileChooserItem)
+                    newItem.submenu = submenu
+                }
                 return newItem
             }
         }
