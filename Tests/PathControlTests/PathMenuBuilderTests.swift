@@ -5,9 +5,12 @@ import SwiftUI
 
 final class PathMenuBuilderTests: XCTestCase {
 
+    private let itemA = PathMenuItem(title: "A", action: {})
+    private let itemB = PathMenuItem(title: "B", action: {})
+
     func testCanBuildSingleItem() {
-        assertBuilder(expectedItems: [PathMenuItem(title: "Abc")]) {
-            PathMenuItem(title: "Abc")
+        assertBuilder(expectedItems: [itemA]) {
+            itemA
         }
     }
 
@@ -18,72 +21,72 @@ final class PathMenuBuilderTests: XCTestCase {
     }
 
     func testCanBuildArray() {
-        assertBuilder(expectedItems: [PathMenuItem(title: "A"), PathMenuItem(title: "B")]) {
-            [PathMenuItem(title: "A"), PathMenuItem(title: "B")]
+        assertBuilder(expectedItems: [itemA, itemB]) {
+            [itemA, itemB]
         }
     }
 
     func testCanBuildMultipleItems() {
-        assertBuilder(expectedItems: [PathMenuItem(title: "A"), PathMenuItem(title: "B")]) {
-            PathMenuItem(title: "A")
-            PathMenuItem(title: "B")
+        assertBuilder(expectedItems: [itemA, PathMenuItem(title: "B", action: {})]) {
+            itemA
+            PathMenuItem(title: "B", action: {})
         }
     }
 
     func testCanUseIfElse() {
         let condition = true
-        assertBuilder(expectedItems: [PathMenuItem(title: "A")]) {
+        assertBuilder(expectedItems: [itemA]) {
             if condition {
-                PathMenuItem(title: "A")
+                itemA
             } else {
-                PathMenuItem(title: "B")
+                PathMenuItem(title: "B", action: {})
             }
         }
-        assertBuilder(expectedItems: [PathMenuItem(title: "B")]) {
+        assertBuilder(expectedItems: [PathMenuItem(title: "B", action: {})]) {
             if !condition {
-                PathMenuItem(title: "A")
+                itemA
             } else {
-                PathMenuItem(title: "B")
+                PathMenuItem(title: "B", action: {})
             }
         }
     }
 
     func testCanUseIfLet() {
         let title: String? = "A"
-        assertBuilder(expectedItems: [PathMenuItem(title: "A")]) {
+        assertBuilder(expectedItems: [itemA]) {
             if let title = title {
-                PathMenuItem(title: title)
+                PathMenuItem(title: title, action: {})
             }
         }
     }
 
     func testCanUseSwitch() {
-        assertBuilder(expectedItems: [PathMenuItem(title: "match")]) {
+        assertBuilder(expectedItems: [PathMenuItem(title: "match", action: {})]) {
             switch "match" {
             case "not a match":
-                PathMenuItem(title: "not a match")
+                PathMenuItem(title: "not a match", action: {})
             case "match":
-                PathMenuItem(title: "match")
+                PathMenuItem(title: "match", action: {})
             default:
-                PathMenuItem(title: "fallback")
+                PathMenuItem(title: "fallback", action: {})
             }
 
         }
     }
 
     func testCanUseOptional() {
-        let itemA: PathMenuItem? = PathMenuItem(title: "A")
-        let itemB: PathMenuItem? = nil
-        assertBuilder(expectedItems: [PathMenuItem(title: "A")]) {
-            itemA
-            itemB
+        let optionalA: PathMenuItem? = PathMenuItem(title: "A", action: {})
+        let optionalB: PathMenuItem? = nil
+        assertBuilder(expectedItems: [itemA]) {
+            optionalA
+            optionalB
         }
     }
 
     func testCanUseDo() {
-        assertBuilder(expectedItems: [PathMenuItem(title: "A")]) { () -> [PathMenuItem] in
+        assertBuilder(expectedItems: [itemA]) { () -> [PathMenuItem] in
             do {
-                PathMenuItem(title: "A")
+                itemA
             }
         }
     }

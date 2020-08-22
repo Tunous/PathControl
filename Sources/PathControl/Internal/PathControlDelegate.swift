@@ -12,12 +12,15 @@ final class PathControlDelegate: NSObject, ObservableObject, NSPathControlDelega
 
     var transformMenuItems: ([PathMenuItem]) -> [PathMenuItem] = { $0 }
     var urlChanged: (URL?) -> Void = { _ in }
+    var actions = [ActionWrapper]()
 
     @objc func pathItemClicked(_ sender: NSPathControl) {
         urlChanged(sender.clickedPathItem?.url)
     }
 
     func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu) {
+        actions = []
+
         let fileChooserItem = menu.item(at: 0)!
         let pathMenuItems = (2..<menu.numberOfItems).compactMap { menu.item(at: $0) }
 
@@ -41,7 +44,11 @@ final class PathControlDelegate: NSObject, ObservableObject, NSPathControlDelega
                 return item.build(basedOn: wrappedMenuItem)
 
             case .item:
-                let newItem = NSMenuItem(title: item.title, action: nil, keyEquivalent: "")
+                let action = ActionWrapper(action: item.action)
+                actions.append(action)
+
+                let newItem = NSMenuItem(title: item.title, action: #selector(action.perform), keyEquivalent: "")
+                newItem.target = action
                 return newItem
             }
         }

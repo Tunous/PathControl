@@ -8,7 +8,9 @@ PopUpPathControl(url: $url) { menuItems in
     
     if menuItems.contains(where: { $0.title == "Users" }) {
         Divider()
-        PathMenuItem(title: "Viewing contents of Users directory")
+        PathMenuItem(title: "Viewing contents of Users directory", action: {
+            print("Clicked")
+        })
     }
     
     Divider()

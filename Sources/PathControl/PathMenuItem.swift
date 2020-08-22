@@ -17,8 +17,8 @@ public struct PathMenuItem {
     /// Creates a path menu item with the given title.
     ///
     /// - Parameter title: The title of menu item.
-    public init(title: String) {
-        self.init(type: .item, title: title)
+    public init(title: String, action: @escaping () -> Void) {
+        self.init(type: .item, title: title, action: action)
     }
 
     enum MenuItemType: Equatable {
@@ -29,10 +29,12 @@ public struct PathMenuItem {
     }
 
     let type: MenuItemType
+    let action: () -> Void
 
-    init(type: MenuItemType, title: String) {
+    init(type: MenuItemType, title: String, action: @escaping () -> Void = {}) {
         self.type = type
         self.title = title
+        self.action = action
     }
 }
 
