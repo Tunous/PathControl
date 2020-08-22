@@ -1,6 +1,6 @@
 //
-//  PathMenuBilder.swift
-//  
+//  PathMenuBuilder.swift
+//  PathControl
 //
 //  Created by Łukasz Rutkowski on 16/08/2020.
 //
@@ -9,7 +9,7 @@ import SwiftUI
 
 /// A function builder used to build a path control menu.
 @_functionBuilder
-public struct PathMenuBilder {
+public struct PathMenuBuilder {
 
     public static func buildExpression(_ menuItem: PathMenuItemConvertible) -> [PathMenuItem] {
         return menuItem.asMenuItems()

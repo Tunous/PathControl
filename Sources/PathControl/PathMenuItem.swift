@@ -21,7 +21,7 @@ public struct PathMenuItem {
         self.init(type: .item, title: title)
     }
 
-    enum MenuItemType {
+    enum MenuItemType: Equatable {
         case fileChooser
         case divider
         case wrapped(NSMenuItem)

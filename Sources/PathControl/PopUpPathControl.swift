@@ -17,7 +17,7 @@ public struct PopUpPathControl: NSViewRepresentable {
     ///
     /// - Parameter url: A binding to property that defines the currently-selected url.
     /// - Parameter content: Contents of pop-up menu.
-    public init(url: Binding<URL?>, @PathMenuBilder content: @escaping ([PathMenuItem]) -> [PathMenuItem]) {
+    public init(url: Binding<URL?>, @PathMenuBuilder content: @escaping ([PathMenuItem]) -> [PathMenuItem]) {
         self._url = url
         self.delegate.transformMenuItems = content
     }
