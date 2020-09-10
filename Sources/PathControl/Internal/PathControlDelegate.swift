@@ -8,39 +8,22 @@
 import Foundation
 import SwiftUI
 
-final class PathControlDelegate: NSObject, ObservableObject, NSPathControlDelegate {
+public final class PathControlDelegate: NSObject {
 
-    var transformMenuItems: ([PathMenuItem]) -> [PathMenuItem] = { currentPathItems in
-        var defaultItems = [
-            PathMenuItem.fileChooser(),
-            PathMenuItem(type: .divider, title: "")
-        ]
-        defaultItems.append(contentsOf: currentPathItems)
-        return defaultItems
-    }
-    var urlChanged: (URL?) -> Void = { _ in }
+    private let transformMenuItems: ([PathMenuItem]) -> [PathMenuItem]
+    private let urlChanged: (URL?) -> Void
     var actions = [ActionWrapper]()
+
+    init(
+        transformMenuItems: @escaping ([PathMenuItem]) -> [PathMenuItem],
+        urlChanged: @escaping (URL?) -> Void
+    ) {
+        self.transformMenuItems = transformMenuItems
+        self.urlChanged = urlChanged
+    }
 
     @objc func pathItemClicked(_ sender: NSPathControl) {
         urlChanged(sender.clickedPathItem?.url)
-    }
-
-    func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu) {
-        actions = []
-
-        let fileChooserItem = menu.item(at: 0)!
-        let pathMenuItems: [NSMenuItem]
-        if menu.items.count > 2 {
-            pathMenuItems = (2..<menu.numberOfItems).compactMap { menu.item(at: $0) }
-        } else {
-            pathMenuItems = []
-        }
-
-        let originalPathItems = pathMenuItems.map {
-            PathMenuItem(type: .wrapped($0), title: $0.title)
-        }
-        let menuDefinition = transformMenuItems(originalPathItems)
-        menu.items = createMenu(from: menuDefinition, fileChooserItem: fileChooserItem)
     }
 
     private func createMenu(from definingMenuItems: [PathMenuItem], fileChooserItem: NSMenuItem) -> [NSMenuItem] {
@@ -70,6 +53,27 @@ final class PathControlDelegate: NSObject, ObservableObject, NSPathControlDelega
                 return newItem
             }
         }
+    }
+}
+
+extension PathControlDelegate: NSPathControlDelegate {
+
+    public func pathControl(_ pathControl: NSPathControl, willPopUp menu: NSMenu) {
+        actions = []
+
+        let fileChooserItem = menu.item(at: 0)!
+        let pathMenuItems: [NSMenuItem]
+        if menu.items.count > 2 {
+            pathMenuItems = (2..<menu.numberOfItems).compactMap { menu.item(at: $0) }
+        } else {
+            pathMenuItems = []
+        }
+
+        let originalPathItems = pathMenuItems.map {
+            PathMenuItem(type: .wrapped($0), title: $0.title)
+        }
+        let menuDefinition = transformMenuItems(originalPathItems)
+        menu.items = createMenu(from: menuDefinition, fileChooserItem: fileChooserItem)
     }
 }
 

@@ -10,8 +10,8 @@ import SwiftUI
 /// A control for display of a file system path or virtual path information.
 public struct PopUpPathControl: NSViewRepresentable {
 
-    @ObservedObject private var delegate = PathControlDelegate()
     @Binding private var url: URL?
+    private let transformMenuItems: ([PathMenuItem]) -> [PathMenuItem]
 
     /// Creates a pop-up path control with its content created based on provided builder.
     ///
@@ -19,7 +19,7 @@ public struct PopUpPathControl: NSViewRepresentable {
     /// - Parameter content: Contents of pop-up menu.
     public init(url: Binding<URL?>, @PathMenuBuilder content: @escaping ([PathMenuItem]) -> [PathMenuItem]) {
         self._url = url
-        self.delegate.transformMenuItems = content
+        self.transformMenuItems = content
     }
 
     /// Creates a pop-up path control with default contents.
@@ -27,24 +27,32 @@ public struct PopUpPathControl: NSViewRepresentable {
     /// - Parameter url: A binding to property that defines the currently-selected url.
     public init(url: Binding<URL?>) {
         self._url = url
+        self.transformMenuItems = { currentPathItems in
+            let defaultItems = [
+                PathMenuItem.fileChooser(),
+                PathMenuItem(type: .divider, title: "")
+            ]
+            return defaultItems + currentPathItems
+        }
     }
 
     public func makeNSView(context: Context) -> NSPathControl {
         let pathControl = NSPathControl()
         pathControl.pathStyle = .popUp
         pathControl.url = url
-
-        delegate.urlChanged = { newUrl in
-            self.url = newUrl
-        }
-        pathControl.target = delegate
-        pathControl.action = #selector(delegate.pathItemClicked)
-        pathControl.delegate = delegate
-
+        pathControl.target = context.coordinator
+        pathControl.action = #selector(context.coordinator.pathItemClicked)
+        pathControl.delegate = context.coordinator
         return pathControl
     }
 
     public func updateNSView(_ nsView: NSPathControl, context: Context) {
         nsView.url = url
+    }
+
+    public func makeCoordinator() -> PathControlDelegate {
+        return PathControlDelegate(transformMenuItems: transformMenuItems) { newUrl in
+            self.url = newUrl
+        }
     }
 }
