@@ -43,12 +43,12 @@ public struct StandardPathControl: NSViewRepresentable {
 /// A control for display of a file system path or virtual path information.
 public struct StandardStaticPathControl: NSViewRepresentable {
 
-    private var url: URL?
+    private var url: URL
 
     /// Creates a standard path control.
     ///
     /// - Parameter url: A binding to property that defines the currently-selected url.
-    public init(url: URL?) {
+    public init(url: URL) {
         self.url = url
     }
 
