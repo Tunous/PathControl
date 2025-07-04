@@ -12,7 +12,7 @@ public final class PathControlDelegate: NSObject {
 
     private let transformMenuItems: ([PathMenuItem]) -> [PathMenuItem]
     private let urlChanged: (URL?) -> Void
-    var actions = [ActionWrapper]()
+    private var actions = [ActionWrapper]()
 
     init(
         transformMenuItems: @escaping ([PathMenuItem]) -> [PathMenuItem],
@@ -79,7 +79,7 @@ extension PathControlDelegate: NSPathControlDelegate {
 
 extension PathMenuItem {
 
-    func build(basedOn menuItem: NSMenuItem) -> NSMenuItem {
+    fileprivate func build(basedOn menuItem: NSMenuItem) -> NSMenuItem {
         let menuItemCopy = menuItem.copy() as! NSMenuItem
         menuItemCopy.title = title
         return menuItemCopy

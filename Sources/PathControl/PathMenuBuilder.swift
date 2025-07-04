@@ -8,7 +8,7 @@
 import SwiftUI
 
 /// A function builder used to build a path control menu.
-@_functionBuilder
+@resultBuilder
 public struct PathMenuBuilder {
 
     public static func buildExpression(_ menuItem: PathMenuItemConvertible) -> [PathMenuItem] {
