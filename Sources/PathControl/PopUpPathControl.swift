@@ -25,7 +25,7 @@ public struct PopUpPathControl: NSViewRepresentable {
     /// Creates a pop-up path control with default contents.
     ///
     /// - Parameter url: A binding to property that defines the currently-selected url.
-    public init(url: Binding<URL?>, fileChooser: Bool = false) {
+    public init(url: Binding<URL?>, fileChooser: Bool = true) {
         self._url = url
         self.transformMenuItems = { currentPathItems in
             if fileChooser {
