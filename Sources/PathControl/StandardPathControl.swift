@@ -7,14 +7,17 @@
 
 import SwiftUI
 
-/// A control for display of a file system path or virtual path information.
+/// A SwiftUI wrapper for `NSPathControl` that supports binding to a modifiable URL.
+///
+/// `StandardPathControl` allows users to display and interact with a file system or virtual path.
+/// It supports updating the selected path through a two-way binding.
 public struct StandardPathControl: NSViewRepresentable {
 
     @Binding private var url: URL?
 
-    /// Creates a standard path control.
+    /// Initializes a new `StandardPathControl` with a bindable URL.
     ///
-    /// - Parameter url: A binding to property that defines the currently-selected url.
+    /// - Parameter url: A two-way binding to the currently selected URL.
     public init(url: Binding<URL?>) {
         self._url = url
     }
@@ -40,14 +43,16 @@ public struct StandardPathControl: NSViewRepresentable {
     }
 }
 
-/// A control for display of a file system path or virtual path information.
+/// A SwiftUI wrapper for `NSPathControl` with a static, non-editable URL.
+///
+/// `StandardStaticPathControl` is useful for displaying a read-only file or virtual path in a consistent style.
 public struct StandardStaticPathControl: NSViewRepresentable {
 
     private var url: URL
 
-    /// Creates a standard path control.
+    /// Initializes a new `StandardStaticPathControl` with a static URL.
     ///
-    /// - Parameter url: A binding to property that defines the currently-selected url.
+    /// - Parameter url: The URL to display.
     public init(url: URL) {
         self.url = url
     }
@@ -62,5 +67,4 @@ public struct StandardStaticPathControl: NSViewRepresentable {
     public func updateNSView(_ nsView: NSPathControl, context: Context) {
         nsView.url = url
     }
-
 }

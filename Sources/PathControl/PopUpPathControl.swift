@@ -7,28 +7,37 @@
 
 import SwiftUI
 
-/// A control for display of a file system path or virtual path information.
+/// A SwiftUI wrapper for `NSPathControl` in pop-up style, allowing customization of the displayed menu items.
+///
+/// `PopUpPathControl` enables users to navigate and select a path using a pop-up menu. The contents of the menu
+/// can be customized via a `PathMenuBuilder`.
 public struct PopUpPathControl: NSViewRepresentable {
 
     @Binding private var url: URL?
     private let transformMenuItems: ([PathMenuItem]) -> [PathMenuItem]
 
-    /// Creates a pop-up path control with its content created based on provided builder.
+    /// Initializes a `PopUpPathControl` with custom menu contents.
     ///
-    /// - Parameter url: A binding to property that defines the currently-selected url.
-    /// - Parameter content: Contents of pop-up menu.
-    public init(url: Binding<URL?>, @PathMenuBuilder content: @escaping ([PathMenuItem]) -> [PathMenuItem]) {
+    /// - Parameters:
+    ///   - url: A binding to the currently selected URL.
+    ///   - content: A closure that defines the menu items shown in the pop-up path control.
+    public init(
+        url: Binding<URL?>,
+        @PathMenuBuilder content: @escaping ([PathMenuItem]) -> [PathMenuItem]
+    ) {
         self._url = url
         self.transformMenuItems = content
     }
 
-    /// Creates a pop-up path control with default contents.
+    /// Initializes a `PopUpPathControl` with optional file chooser.
     ///
-    /// - Parameter url: A binding to property that defines the currently-selected url.
-    public init(url: Binding<URL?>, fileChooser: Bool = true) {
+    /// - Parameters:
+    ///   - url: A binding to the currently selected URL.
+    ///   - includeFileChooser: Whether to include a standard file chooser item in the menu. Defaults to `true`.
+    public init(url: Binding<URL?>, includeFileChooser: Bool = true) {
         self._url = url
         self.transformMenuItems = { currentPathItems in
-            if fileChooser {
+            if includeFileChooser {
                 let defaultItems = [
                     PathMenuItem.fileChooser(),
                     PathMenuItem(type: .divider, title: "")
