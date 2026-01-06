@@ -14,18 +14,24 @@ import SwiftUI
 public struct StandardPathControl: NSViewRepresentable {
 
     @Binding private var url: URL?
+    private var allowedTypes: [String]?
+    private var placeholderString: String?
 
     /// Initializes a new `StandardPathControl` with a bindable URL.
     ///
     /// - Parameter url: A two-way binding to the currently selected URL.
-    public init(url: Binding<URL?>) {
+    public init(url: Binding<URL?>, allowedTypes: [String]? = nil, placeholderString: String?) {
         self._url = url
+        self.allowedTypes = allowedTypes
+        self.placeholderString = placeholderString
     }
 
     public func makeNSView(context: Context) -> NSPathControl {
         let pathControl = NSPathControl()
         pathControl.pathStyle = .standard
         pathControl.url = url
+        pathControl.allowedTypes = allowedTypes
+        pathControl.placeholderString = placeholderString
         pathControl.target = context.coordinator
         pathControl.action = #selector(context.coordinator.pathItemClicked)
         pathControl.delegate = context.coordinator
