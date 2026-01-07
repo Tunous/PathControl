@@ -14,6 +14,9 @@ import SwiftUI
 public struct PopUpPathControl: NSViewRepresentable {
 
     @Binding private var url: URL?
+    private var allowedTypes: [String]?
+    private var placeholderString: String?
+
     private let transformMenuItems: ([PathMenuItem]) -> [PathMenuItem]
 
     /// Initializes a `PopUpPathControl` with custom menu contents.
@@ -34,8 +37,10 @@ public struct PopUpPathControl: NSViewRepresentable {
     /// - Parameters:
     ///   - url: A binding to the currently selected URL.
     ///   - includeFileChooser: Whether to include a standard file chooser item in the menu. Defaults to `true`.
-    public init(url: Binding<URL?>, includeFileChooser: Bool = true) {
+    public init(url: Binding<URL?>, includeFileChooser: Bool = true, allowedTypes: [String]? = nil, placeholderString: String? = nil) {
         self._url = url
+        self.allowedTypes = allowedTypes
+        self.placeholderString = placeholderString
         self.transformMenuItems = { currentPathItems in
             if includeFileChooser {
                 let defaultItems = [
@@ -53,6 +58,8 @@ public struct PopUpPathControl: NSViewRepresentable {
         let pathControl = NSPathControl()
         pathControl.pathStyle = .popUp
         pathControl.url = url
+        pathControl.allowedTypes = allowedTypes
+        pathControl.placeholderString = placeholderString
         pathControl.target = context.coordinator
         pathControl.action = #selector(context.coordinator.pathItemClicked)
         pathControl.delegate = context.coordinator

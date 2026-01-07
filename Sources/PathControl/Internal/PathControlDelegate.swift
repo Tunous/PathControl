@@ -23,7 +23,7 @@ public final class PathControlDelegate: NSObject {
     }
 
     @objc func pathItemClicked(_ sender: NSPathControl) {
-        urlChanged(sender.clickedPathItem?.url)
+        urlChanged(sender.clickedPathItem?.url ?? sender.url)
     }
 
     private func createMenu(from definingMenuItems: [PathMenuItem], fileChooserItem: NSMenuItem) -> [NSMenuItem] {
